@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import Product from "./Product";
 import Cart from "./Cart";
 
 export const productAtom = atom(Product);
 export const priceAtom = atom(Cart);
+export const totalAtom = atom(0);
 
 export default function Home() {
   return (
@@ -30,7 +31,6 @@ const ProductsContainer = () => {
     addProduct(val);
   };
   function addProduct(val) {
-    console.log("val", val);
     const data = price;
     data.forEach((res, i) => {
       if (res.title === val.title && res.price === val.price) {
@@ -61,7 +61,13 @@ const ProductsContainer = () => {
 
 const Container = () => {
   const [cart, setCart] = useAtom(priceAtom);
-  console.log("cart", cart);
+  const [total, setTotal] = useAtom(totalAtom);
+  useEffect(() => {
+    cart.forEach((val) => {
+      const count = val.quantity * val.price;
+      setTotal(total + count);
+    });
+  });
   return (
     <>
       <h3>Your Cart</h3>
@@ -69,10 +75,17 @@ const Container = () => {
         cart.map((val) => (
           <div key={val.id}>{val.quantity !== 0 ? `${val.title} - ${val.price} x ${val.quantity}` : null}</div>
         ))}
-      Total:$
+      Total:$ {total}
       <br />
       <br />
-      <button>CheckOut</button>
+      <button
+        disabled={total === 0}
+        onClick={() => {
+          setCart(Cart);
+        }}
+      >
+        CheckOut
+      </button>
     </>
   );
 };
