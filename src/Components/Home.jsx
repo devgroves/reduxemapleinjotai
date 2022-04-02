@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { atom, useAtom } from "jotai";
 import Product from "./Product";
 import Cart from "./Cart";
@@ -24,6 +24,7 @@ export default function Home() {
 const ProductsContainer = () => {
   const [product, setProduct] = useAtom(productAtom);
   const [price, setPrice] = useAtom(priceAtom);
+  const [total, setTotal] = useAtom(totalAtom);
   const handleClick = (val) => {
     const data = product;
     data[val.id].quantity = data[val.id].quantity - 1;
@@ -35,6 +36,7 @@ const ProductsContainer = () => {
     data.forEach((res, i) => {
       if (res.title === val.title && res.price === val.price) {
         res.quantity = res.quantity + 1;
+        setTotal(total + res.price);
       }
     });
     setPrice(data);
@@ -59,21 +61,15 @@ const ProductsContainer = () => {
 };
 
 const CartContainer = () => {
-  const [cart, setCart] = useAtom(priceAtom);
+  const [cart] = useAtom(priceAtom);
   const [total, setTotal] = useAtom(totalAtom);
-  // useEffect(() => {
-  //   cart.forEach((val) => {
-  //     const count = val.quantity * val.price;
-  //     console.log("count", count);
-  //     setTotal(total + count);
-  //   });
-  // }, [cart]);
-  // const count = (val) => {
-  //   const count = val.quantity * val.price;
-  //   console.log("count", count);
-  //   setTotal(total + count);
-  //   return;
-  // };
+  const CheckOut = () => {
+    cart.forEach((res, i) => {
+      if (res.quantity !== 0) {
+        res.quantity = 0;
+      }
+    });
+  };
   return (
     <>
       <h3>Your Cart</h3>
@@ -93,7 +89,8 @@ const CartContainer = () => {
       <button
         disabled={total === 0}
         onClick={() => {
-          setCart(Cart);
+          CheckOut();
+          setTotal(0);
         }}
       >
         CheckOut
@@ -101,5 +98,3 @@ const CartContainer = () => {
     </>
   );
 };
-
-// export const CartContainer = React.memo(Container);
