@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# shoppingcartbyjotai
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Shopping cart example shown in redux offical site is rewritten in jotai to explain the easness and light weightness of the framework
 
-## Available Scripts
+## Installation steps
 
-In the project directory, you can run:
+git clone https://github.com/devgroves/shoppingcartbyjotai
 
-### `npm start`
+npm install
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+npm start
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Introduction
 
-### `npm test`
+Jotai is a minimalist state-management library for React. It’s tiny and fast. It requires practically no boilerplate. Typescript is built in. It supports Suspense, and it’s ready for concurrent mode.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The mechanics of Jotai is very similar to React Context and Recoil, but even if you’re not familiar with either concept, this article will get you up to speed very quickly, because Jotai is very simple.
 
-### `npm run build`
+### How Jotai works
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Atoms
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To create a piece of state, use the atom() function. For example,
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### const counterAtom = atom(0) // 0 is the initial value
 
-### `npm run eject`
+To use the state in a component, call the useAtom() hook:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### const [counter, setCounter] = useAtom(counterAtom)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+useAtom looks and acts a lot like React’s useState hook. It returns the current value of the atom as well as a function to set the value of the atom.
+That’s really all you need to know to get started. Let’s look at an example:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Clicking on the button calls setCounter() to increment its value. When the value ofcounterAtomchanges, the <CurrentCount/> component is re-rendered with the new value. It’s really that simple.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The set function that is returned by useAtom is similar to the set function returned by React’s useState: you can provide the value, or in you can provide a function to change the value. In the example, the button could have been implemented like this:
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### <button onClick={() => setCounter(c=>c+1)}>Click to increment</button>
