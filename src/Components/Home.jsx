@@ -35,7 +35,6 @@ const ProductsContainer = () => {
     data.forEach((res, i) => {
       if (res.title === val.title && res.price === val.price) {
         res.quantity = res.quantity + 1;
-        console.log("res.quantity", res.quantity);
       }
     });
     setPrice(data);
@@ -59,21 +58,34 @@ const ProductsContainer = () => {
   );
 };
 
-const Container = () => {
+const CartContainer = () => {
   const [cart, setCart] = useAtom(priceAtom);
   const [total, setTotal] = useAtom(totalAtom);
-  useEffect(() => {
-    cart.forEach((val) => {
-      const count = val.quantity * val.price;
-      setTotal(total + count);
-    });
-  });
+  // useEffect(() => {
+  //   cart.forEach((val) => {
+  //     const count = val.quantity * val.price;
+  //     console.log("count", count);
+  //     setTotal(total + count);
+  //   });
+  // }, [cart]);
+  // const count = (val) => {
+  //   const count = val.quantity * val.price;
+  //   console.log("count", count);
+  //   setTotal(total + count);
+  //   return;
+  // };
   return (
     <>
       <h3>Your Cart</h3>
       {cart &&
         cart.map((val) => (
-          <div key={val.id}>{val.quantity !== 0 ? `${val.title} - ${val.price} x ${val.quantity}` : null}</div>
+          <div key={val.id}>
+            {val.quantity !== 0 ? (
+              <>
+                {val.title} - ${val.price} x {val.quantity}
+              </>
+            ) : null}
+          </div>
         ))}
       Total:$ {total}
       <br />
@@ -90,4 +102,4 @@ const Container = () => {
   );
 };
 
-export const CartContainer = React.memo(Container);
+// export const CartContainer = React.memo(Container);
