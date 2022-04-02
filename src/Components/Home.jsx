@@ -59,7 +59,7 @@ const ProductsContainer = () => {
   );
 };
 
-const CartContainer = () => {
+const Container = () => {
   const [cart, setCart] = useAtom(priceAtom);
   console.log("cart", cart);
   return (
@@ -76,3 +76,5 @@ const CartContainer = () => {
     </>
   );
 };
+
+export const CartContainer = React.memo(Container);
