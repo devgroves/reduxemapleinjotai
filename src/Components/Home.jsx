@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import Product from "./Product";
 import Cart from "./Cart";
 
 export const productAtom = atom(Product);
 export const priceAtom = atom(Cart);
+export const totalAtom = atom(0);
 
 export default function Home() {
   return (
@@ -24,14 +25,21 @@ const ProductsContainer = () => {
   const [product, setProduct] = useAtom(productAtom);
   const [price, setPrice] = useAtom(priceAtom);
   const handleClick = (val) => {
-    // const value = product;
-    // value[val.id].quantity = value[val.id].quantity + 1;
-    // setPrice([...value]);
     const data = product;
     data[val.id].quantity = data[val.id].quantity - 1;
-    console.log("data", data);
     setProduct([...data]);
+    addProduct(val);
   };
+  function addProduct(val) {
+    const data = price;
+    data.forEach((res, i) => {
+      if (res.title === val.title && res.price === val.price) {
+        res.quantity = res.quantity + 1;
+        console.log("res.quantity", res.quantity);
+      }
+    });
+    setPrice(data);
+  }
 
   return (
     <>
@@ -53,13 +61,33 @@ const ProductsContainer = () => {
 
 const Container = () => {
   const [cart, setCart] = useAtom(priceAtom);
-  console.log("cart", cart);
+  const [total, setTotal] = useAtom(totalAtom);
+  useEffect(() => {
+    cart.forEach((val) => {
+      const count = val.quantity * val.price;
+      setTotal(total + count);
+    });
+  });
   return (
     <>
       <h3>Your Cart</h3>
-      Please add some products to cart.
+      {cart &&
+        cart.map((val) => (
+          <div key={val.id}>{val.quantity !== 0 ? `${val.title} - ${val.price} x ${val.quantity}` : null}</div>
+        ))}
+      Total:$ {total}
+      <br />
+      <br />
+      <button
+        disabled={total === 0}
+        onClick={() => {
+          setCart(Cart);
+        }}
+      >
+        CheckOut
+      </button>
     </>
   );
 };
 
-const CartContainer = React.memo(Container);
+export const CartContainer = React.memo(Container);
