@@ -24,14 +24,22 @@ const ProductsContainer = () => {
   const [product, setProduct] = useAtom(productAtom);
   const [price, setPrice] = useAtom(priceAtom);
   const handleClick = (val) => {
-    // const value = product;
-    // value[val.id].quantity = value[val.id].quantity + 1;
-    // setPrice([...value]);
     const data = product;
     data[val.id].quantity = data[val.id].quantity - 1;
-    console.log("data", data);
     setProduct([...data]);
+    addProduct(val);
   };
+  function addProduct(val) {
+    console.log("val", val);
+    const data = price;
+    data.forEach((res, i) => {
+      if (res.title === val.title && res.price === val.price) {
+        res.quantity = res.quantity + 1;
+        console.log("res.quantity", res.quantity);
+      }
+    });
+    setPrice(data);
+  }
 
   return (
     <>
@@ -51,15 +59,20 @@ const ProductsContainer = () => {
   );
 };
 
-const Container = () => {
+const CartContainer = () => {
   const [cart, setCart] = useAtom(priceAtom);
   console.log("cart", cart);
   return (
     <>
       <h3>Your Cart</h3>
-      Please add some products to cart.
+      {cart &&
+        cart.map((val) => (
+          <div key={val.id}>{val.quantity !== 0 ? `${val.title} - ${val.price} x ${val.quantity}` : null}</div>
+        ))}
+      Total:$
+      <br />
+      <br />
+      <button>CheckOut</button>
     </>
   );
 };
-
-const CartContainer = React.memo(Container);
