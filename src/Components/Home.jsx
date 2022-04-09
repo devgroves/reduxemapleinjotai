@@ -79,21 +79,17 @@ function ProductsContainer() {
 };
 
 const CartContainer = () => {
-  const [ cart ] = useAtom(cartAtom);
+  const [ cart, setCart ] = useAtom(cartAtom);
   const [ totalPrice ] = useAtom(totalAtom);
   const doCheckout = () => {
     console.log("total price ", totalPrice);
-    cart.forEach((res, i) => {
-      if (res.quantity !== 0) {
-        res.quantity = 0;
-      }
-    });
+    setCart([]);
   };
   
   return (
     <>
       <h3>Your Cart</h3>
-      {cart ?
+      {cart && cart.length > 0 ?
         cart.map((val) => (
           <div key={val.id}>
             {val.quantity !== 0 ? (
